@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Report
+{% endblock %}
+
+{% block main %}
+
+
+<!--<dl>-->
+<!--    {% if report_dict_len == 1 %}-->
+<!--        <dt>{{ user_list_fullname[0] }}</dt>-->
+<!--        {% for book in report_dict %}-->
+<!--        <dd style="display: list-item; margin-left: 40px; color:red; list-style-type: disc;">{{ book }}</dd>-->
+<!--        {% endfor %}-->
+<!--    {% else %}-->
+<!--        {% for i in range(0, report_dict_len) %}-->
+<!--            <dt class="list-group-item text-left">{{ user_list_fullname[i] }}</dt>-->
+<!--            {% for book in report_dict[i + 1] %}-->
+<!--            <dd class="list-group-item text-left raport">{{ book }}</dd>-->
+<!--            {% endfor %}-->
+<!--        {% endfor %}-->
+<!--    {% endif %}-->
+<!--</dl>-->
+<h2 class="text-uppercase font-weight-bold">borrowing report</h2>
+
+
+<dl class="list-group">
+    {% if report_dict_len == 1 %}
+        <dt class="list-group-item text-left">{{ user_list_fullname[0] }}</dt>
+        {% for book in report_dict %}
+        <dd class="list-group-item text-left" style="padding-left: 40px;">{{ book }}</dd>
+        {% endfor %}
+    {% else %}
+        {% for i in range(0, report_dict_len) %}
+            <dt class="list-group-item text-left">{{ user_list_fullname[i] }}</dt>
+            {% for book in report_dict[i + 1] %}
+            <dd class="list-group-item text-left raport" style="padding-left: 40px;">{{ book }}</dd>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+</dl>
+
+
+
+
+{% endblock %}

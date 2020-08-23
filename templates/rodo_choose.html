@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Rodo
+{% endblock %}
+
+{% block main %}
+<h2 class="text-uppercase font-weight-bold">junior library</h2>
+    {% block apology %}
+    {% endblock %}
+
+<div class="btn-group-vertical">
+    <a class="btn btn-primary text-uppercase" href="/rodo_export"  role="button">export user to json</a>
+    <a class="btn btn-danger text-uppercase" href="/rodo_import" role="button">import user from json</a>
+</div>
+
+{% endblock %}

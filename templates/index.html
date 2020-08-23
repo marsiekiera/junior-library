@@ -1,11 +1,19 @@
-<!DOCTYPE html>
+{% extends "layout.html" %}
 
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    </head>
-    <body>
-        <p>welcome</p>
-    </body>
-</html>
+{% block title %}
+    Homepage
+{% endblock %}
+
+{% block main %}
+<h2 class="text-uppercase font-weight-bold">junior library</h2>
+    {% block apology %}
+    {% endblock %}
+
+<div class="btn-group-vertical">
+    <a class="btn btn-primary text-uppercase" href="/borrow" role="button">borrow a book</a>
+    <a class="btn btn-danger text-uppercase" href="/returned" role="button">return the book</a>
+    <a class="btn btn-success text-uppercase" href="/report" role="button">report</a>
+    <a class="btn btn-info text-uppercase" href="/rodo_choose" role="button">rodo</a>
+</div>
+
+{% endblock %}

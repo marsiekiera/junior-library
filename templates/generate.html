@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Report generator
+{% endblock %}
+
+{% block main %}
+
+<h2 class="text-uppercase font-weight-bold">generate report</h2>
+
+<form action="/report" method="post">
+    <div class="form-group">
+            <select autocomplete="off" autofocus class="form-control" name="user_id" type="text">
+                <option value="" disabled selected>USER ID</option>
+                <option value="all_users">All users</option>
+                {% for user in user_list %}
+                    <option value="{{ user }}">{{ user }}</option>
+                {% endfor %}
+            </select>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Generate raport</button>
+</form>
+
+{% endblock %}
