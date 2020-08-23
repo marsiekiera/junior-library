@@ -10,12 +10,12 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 db = SQL("sqlite:///library.db")
 
-def check_books():
-    db.execute("INSERT INTO users (first_name, last_name, email) VALUES ('Jan', 'Nowak', 'imejl');")
+# def check_books():
+#     db.execute("INSERT INTO users (first_name, last_name, email) VALUES ('Jan', 'Nowak', 'imejl');")
 
-scheduler = BackgroundScheduler(daemon=True)
-scheduler.add_job(check_books,'interval',seconds=10)
-scheduler.start()
+# scheduler = BackgroundScheduler(daemon=True)
+# scheduler.add_job(check_books,'interval',seconds=10)
+# scheduler.start()
 
 
 
