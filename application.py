@@ -10,14 +10,6 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 db = SQL("sqlite:///library.db")
 
-# def check_books():
-#     db.execute("INSERT INTO users (first_name, last_name, email) VALUES ('Jan', 'Nowak', 'imejl');")
-
-# scheduler = BackgroundScheduler(daemon=True)
-# scheduler.add_job(check_books,'interval',seconds=10)
-# scheduler.start()
-
-
 
 @app.route("/")
 def main():
@@ -183,3 +175,61 @@ def rodo_import():
     else:
         return render_template("rodo_import.html")
 
+
+def check_unreturned_books():
+    today = datetime.now()
+    max_borrow_days = 30
+    user_list_dict_reminder = db.execute("SELECT user_id FROM reminder WHERE status = 0;")
+    user_list_reminder = [] # list of all users with book no return on time
+    for user in user_list_dict_reminder:
+        user_list_reminder.append(user["user_id"])
+
+    user_list_dict = db.execute("SELECT user_id FROM users;")
+    for user in user_list_dict:
+        user_id = user["user_id"]
+        books_borrowed = db.execute("SELECT book_id FROM books WHERE user_id = ?;", user_id)
+        books_borrowed_id_list = []
+        dates_list = []
+        for i in range(0, len(books_borrowed)):
+            books_borrowed_id_list.append(books_borrowed[i]["book_id"])
+            dates_list.append(db.execute("SELECT date FROM history WHERE book_id = ?;", books_borrowed[i]["book_id"]))
+        for i in range(0, len(dates_list)):
+            date_string = dates_list[i][len(dates_list[i]) - 1]["date"]
+            date_obj = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
+            time_delta = today - date_obj
+            if time_delta.days > max_borrow_days:
+                if user_id not in user_list_reminder:
+                    user_list_reminder.append(user_id)
+                    db.execute("INSERT INTO reminder (user_id) VALUES (?);", user_id)
+    for user_id in user_list_reminder: # list of all users with book no return on time
+        last_email = db.execute("SELECT last_email FROM reminder WHERE user_id = ?;", user_id)[0]["last_email"] # when was sent last email
+        if last_email == 7: # if last email sent 7 day ago
+            user_books_dict = db.execute("SELECT book_id FROM books WHERE user_id = ?;", user_id)
+            user_books_list = [] # list of all users books
+            for book in user_books_dict:
+                user_books_list.append(book["book_id"])
+            user_books_reminder = [] # lista książek, które są przeterminowane 
+            for book in user_books_list:
+                date_book_dict = db.execute("SELECT date FROM history WHERE book_id = ?", book)
+                date_string = date_book_dict[len(date_book_dict) - 1]['date']
+                date_obj = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
+                time_delta = today - date_obj
+                if time_delta.days > max_borrow_days:
+                    user_books_reminder.append(book)
+            all_books_reminder = []
+            # Dict with book title and author
+            for book in user_books_reminder:
+                all_books_reminder.append(db.execute("SELECT title, author FROM books WHERE book_id = ?;", book)[0])
+            user_email = db.execute("SELECT email FROM users WHERE user_id = ?;", user_id)[0]['email']
+            print(f"A user with login: {user_email} has the following books not returned on time:")
+            for book in all_books_reminder:
+                print(f"    - {book['title']}, {book['author']}")
+            # In future app will be sent email to user
+            db.execute("UPDATE reminder SET last_email = 1 WHERE user_id = ?;", user_id)
+        else:
+            last_email += 1
+            db.execute("UPDATE reminder SET last_email = ? WHERE user_id = ?;", last_email, user_id)
+
+scheduler = BackgroundScheduler(daemon=True)
+scheduler.add_job(check_unreturned_books,'interval',seconds=20)
+scheduler.start()
