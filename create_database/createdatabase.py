@@ -14,6 +14,7 @@ db = SQL("sqlite:///library.db")
 db.execute("CREATE TABLE users (user_id INTEGER PRIMARY KEY, first_name TEXT NOT NULL, last_name TEXT NOT NULL, email TEXT NOT NULL);")
 db.execute("CREATE TABLE books (book_id INTEGER PRIMARY KEY, title TEXT NOT NULL, author TEXT NOT NULL, year TEXT NOT NULL, status INTEGER DEFAULT 1, user_id INTEGER DEFAULT 0);")
 db.execute("CREATE TABLE history (id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL, book_id INTEGER NOT NULL, date TEXT NOT NULL, status INTEGER DEFAULT 0);")
+db.execute("CREATE TABLE reminder (id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL, last_email INTEGER DEFAULT 7, status INTEGER DEFAULT 0);")
 
 ##################
 # insert data into users table
