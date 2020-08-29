@@ -208,7 +208,7 @@ def check_unreturned_books():
             user_books_list = [] # list of all users books
             for book in user_books_dict:
                 user_books_list.append(book["book_id"])
-            user_books_reminder = [] # lista książek, które są przeterminowane 
+            user_books_reminder = []
             for book in user_books_list:
                 date_book_dict = db.execute("SELECT date FROM history WHERE book_id = ?", book)
                 date_string = date_book_dict[len(date_book_dict) - 1]['date']
@@ -231,5 +231,5 @@ def check_unreturned_books():
             db.execute("UPDATE reminder SET last_email = ? WHERE user_id = ?;", last_email, user_id)
 
 scheduler = BackgroundScheduler(daemon=True)
-scheduler.add_job(check_unreturned_books,'interval',seconds=20)
+scheduler.add_job(check_unreturned_books, 'cron', hour=00, minute=1)
 scheduler.start()
