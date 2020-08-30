@@ -1,7 +1,6 @@
 from flask import Flask, redirect, render_template, request, json, jsonify
 from cs50 import SQL
 from datetime import datetime
-import json
 from apscheduler.schedulers.background import BackgroundScheduler
 
 
@@ -221,9 +220,11 @@ def check_unreturned_books():
             for book in user_books_reminder:
                 all_books_reminder.append(db.execute("SELECT title, author FROM books WHERE book_id = ?;", book)[0])
             user_email = db.execute("SELECT email FROM users WHERE user_id = ?;", user_id)[0]['email']
+            #print("test")
             print(f"A user with login: {user_email} has the following books not returned on time:")
             for book in all_books_reminder:
                 print(f"    - {book['title']}, {book['author']}")
+                #print("test2")
             # In future app will be sent email to user
             db.execute("UPDATE reminder SET last_email = 1 WHERE user_id = ?;", user_id)
         else:
