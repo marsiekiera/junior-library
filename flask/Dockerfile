@@ -1,5 +1,9 @@
-FROM python:3.8.5-alpine
-WORKDIR /project
-ADD . /project
+FROM python:3.7.9-stretch
+
+WORKDIR /app
+
+ADD . /app
+
 RUN pip install -r requirements.txt
-CMD ["python","app.py"]
+
+CMD ["uwsgi", "app.ini"]
